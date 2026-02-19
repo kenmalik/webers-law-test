@@ -1,4 +1,4 @@
-from visualizations.sample import make_viz
+from generators.sample import make_viz
 
 def main():
     print("Weber's law test")

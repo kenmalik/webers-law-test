@@ -1,6 +1,6 @@
-# Visualizations
+# Generators
 
-This directory contains the Python scripts used to create the visualizations.
+This directory contains the Python scripts used to generate the visualizations.
 
 
 ## Developing
