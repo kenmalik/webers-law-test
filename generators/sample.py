@@ -65,8 +65,8 @@ def _build_bar_pair(save_figure):
     p2 = save_figure(fig, "V2_bar_gridlines.png")
 
     return [
-        (p1, "Which percent difference is larger: Riverton vs Northvale, or Cedar Bay vs Doverfield?", "Cedar Bay vs Doverfield"),
-        (p2, "Which percent difference is larger: Riverton vs Northvale, or Cedar Bay vs Doverfield?", "Cedar Bay vs Doverfield"),
+        (p1, "Which percent difference is larger: Riverton vs Northvale, or Cedar Bay vs Doverfield?", "Riverton vs Northvale"),
+        (p2, "Which percent difference is larger: Riverton vs Northvale, or Cedar Bay vs Doverfield?", "Riverton vs Northvale"),
     ]
 
 
