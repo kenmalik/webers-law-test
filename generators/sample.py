@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
-def make_viz((output_folder: str = "weber_stimuli_out", export_dpi: int = 200) -> None:
+def make_viz(output_folder: str = "weber_stimuli_out", export_dpi: int = 200) -> None:
     """
     Generates 6 Weber’s Law stimulus images (3 pairs) and a questions.txt file.
 
@@ -40,109 +40,160 @@ def make_viz((output_folder: str = "weber_stimuli_out", export_dpi: int = 200) -
 
 
 def _build_bar_pair(save_figure):
-    value_a = 64
-    value_b = 66  # correct: B
+    district_names = ["Riverton", "Northvale", "Marigold", "Eastpoint", "Cedar Bay", "Doverfield"]
+    broken_hydrant_percent = np.array([12.18, 12.77, 12.43, 12.59, 12.00, 12.52], dtype=float)
 
-    fig, ax = plt.subplots(figsize=(6, 4))
-    ax.bar(["A", "B"], [value_a, value_b])
-    ax.set_ylim(55, 75)
-    ax.set_title("V1 — Bar (No Aids)")
+    y_min, y_max = 11.90, 13.10
+    y_ticks = np.arange(y_min, y_max + 1e-9, 0.05)
+
+    fig, ax = plt.subplots(figsize=(8.6, 4.0))
+    ax.bar(district_names, broken_hydrant_percent, width=0.7)
+    ax.set_ylim(y_min, y_max)
+    ax.set_yticks(y_ticks)
+    ax.grid(axis="y", alpha=0.0)
+    ax.set_title("V1 — Percent of Broken Fire Hydrants (Astra City Districts)")
+    ax.tick_params(axis="x", rotation=20)
     p1 = save_figure(fig, "V1_bar_no_aids.png")
 
-    fig, ax = plt.subplots(figsize=(6, 4))
-    ax.bar(["A", "B"], [value_a, value_b])
-    ax.set_ylim(55, 75)
-    ax.set_yticks(np.arange(55, 76, 1))
-    ax.grid(axis="y", alpha=0.6)
-    ax.set_title("V2 — Bar (Gridlines)")
+    fig, ax = plt.subplots(figsize=(8.6, 4.0))
+    ax.bar(district_names, broken_hydrant_percent, width=0.7)
+    ax.set_ylim(y_min, y_max)
+    ax.set_yticks(y_ticks)
+    ax.grid(axis="y", alpha=0.35)
+    ax.set_title("V2 — Percent of Broken Fire Hydrants (Astra City Districts)")
+    ax.tick_params(axis="x", rotation=20)
     p2 = save_figure(fig, "V2_bar_gridlines.png")
 
     return [
-        (p1, "Which bar is larger? (A or B)", "B"),
-        (p2, "Which bar is larger? (A or B)", "B"),
+        (p1, "Which percent difference is larger: Riverton vs Northvale, or Cedar Bay vs Doverfield?", "Cedar Bay vs Doverfield"),
+        (p2, "Which percent difference is larger: Riverton vs Northvale, or Cedar Bay vs Doverfield?", "Cedar Bay vs Doverfield"),
     ]
 
 
 def _build_line_pair(save_figure):
-    x_values = np.arange(1, 11)
+    price_points = np.linspace(10.0, 60.0, 26)
 
-    line_a = np.array([32, 33, 33, 32, 33, 34, 34, 33, 32, 33], dtype=float)
-    line_b = np.array([32, 32, 33, 32, 33, 34, 35, 33, 32, 33], dtype=float)  # B higher at x=7
+    p = price_points
+    curve_a = 130.0 + 28.0 * np.sin((p - 12.0) / 7.5) - 1.35 * p + 0.018 * (p - 34.0) ** 2
+    curve_b = 118.0 + 24.0 * np.cos((p + 4.0) / 8.2) - 1.05 * p + 0.030 * (p - 42.0) ** 2
+    curve_c = 125.0 + 18.0 * np.sin((p + 1.0) / 6.1) - 1.25 * p + 0.022 * (p - 28.0) ** 2
 
-    fig, ax = plt.subplots(figsize=(7, 4))
-    ax.plot(x_values, line_a, marker="o", label="A")
-    ax.plot(x_values, line_b, marker="o", label="B")
-    ax.set_xticks(x_values)
-    ax.set_ylim(30, 37)
-    ax.set_title("V3 — Line (No Aids)")
-    ax.legend(frameon=False)
+    demand_curves = {
+        "Product Alder": np.clip(curve_a, 0.0, None),
+        "Product Birch": np.clip(curve_b, 0.0, None),
+        "Product Cedar": np.clip(curve_c, 0.0, None),
+    }
+
+    y_min, y_max = 0.0, 170.0
+    y_ticks = np.arange(y_min, y_max + 1e-9, 10.0)
+
+    fig, ax = plt.subplots(figsize=(8.4, 4.0))
+    for name, y in demand_curves.items():
+        ax.plot(price_points, y, linewidth=1.6, color="0.35", label=name)
+    ax.set_xlim(10.0, 60.0)
+    ax.set_ylim(y_min, y_max)
+    ax.set_yticks(y_ticks)
+    ax.grid(True, alpha=0.0)
+    ax.set_title("V3 — Demand (Price vs Quantity)")
+    ax.set_xlabel("Price (credits)")
+    ax.set_ylabel("Quantity (units)")
+    ax.legend(frameon=False, loc="upper right")
     p3 = save_figure(fig, "V3_line_no_aids.png")
 
-    fig, ax = plt.subplots(figsize=(7, 4))
-    ax.plot(x_values, line_a, marker="o", label="A")
-    ax.plot(x_values, line_b, marker="o", label="B")
-    ax.set_xticks(x_values)
-    ax.set_yticks(np.arange(30, 38, 1))
-    ax.set_ylim(30, 37)
-    ax.grid(True, alpha=0.5)
-    ax.set_title("V4 — Line (Gridlines)")
-    ax.legend(frameon=False)
+    fig, ax = plt.subplots(figsize=(8.4, 4.0))
+    color_list = ["tab:blue", "tab:orange", "tab:green"]
+    for (name, y), c in zip(demand_curves.items(), color_list):
+        ax.plot(price_points, y, linewidth=1.6, color=c, label=name)
+        ax.fill_between(price_points, y, y_min, alpha=0.14, color=c)
+    ax.set_xlim(10.0, 60.0)
+    ax.set_ylim(y_min, y_max)
+    ax.set_yticks(y_ticks)
+    ax.grid(True, alpha=0.0)
+    ax.set_title("V4 — Demand (Filled Area Aid)")
+    ax.set_xlabel("Price (credits)")
+    ax.set_ylabel("Quantity (units)")
+    ax.legend(frameon=False, loc="upper right")
     p4 = save_figure(fig, "V4_line_gridlines.png")
 
+    areas = {name: float(np.trapz(y, price_points)) for name, y in demand_curves.items()}
+    correct_product = max(areas, key=areas.get)
+
     return [
-        (p3, "At x = 7, which line is higher? (A or B)", "B"),
-        (p4, "At x = 7, which line is higher? (A or B)", "B"),
+        (p3, "From price 12 to 58, which product has the largest total quantity (area under the curve)?", correct_product),
+        (p4, "From price 12 to 58, which product has the largest total quantity (area under the curve)?", correct_product),
     ]
 
 
 def _build_dot_count_pair(save_figure):
-    count_a = 57
-    count_b = 60  # correct: B
+    fragrance_names = ["Citrus Sky", "Amber Noir", "Velvet Rose", "Saffron Mist", "Juniper Clean", "Iris Smoke"]
+    oil_percent = np.array([18.4, 19.1, 18.7, 19.3, 18.6, 19.0], dtype=float)
 
-    def points_for_group(n, x_offset):
-        columns = 10
-        xs, ys = [], []
-        for idx in range(n):
-            row, col = divmod(idx, columns)
-            xs.append(x_offset + col)
-            ys.append(row)
-        return np.array(xs), np.array(ys)
+    rng = np.random.default_rng(42)
 
-    ax_x, ax_y = points_for_group(count_a, x_offset=0)
-    bx_x, bx_y = points_for_group(count_b, x_offset=14)
+    dots_per_percent = 2
+    total_percent = 100
+    total_dots = total_percent * dots_per_percent
 
-    fig, ax = plt.subplots(figsize=(7, 4))
-    ax.scatter(ax_x, ax_y, s=20)
-    ax.scatter(bx_x, bx_y, s=20)
-    ax.set_title("V5 — Dot Counts (No Aids)")
-    ax.set_xticks([4.5, 18.5], ["A", "B"])
+    x = np.arange(len(fragrance_names))
+
+    y_min, y_max = 0.0, 1.0
+
+    fig, ax = plt.subplots(figsize=(9.2, 4.0))
+    for i, pct in enumerate(oil_percent):
+        filled = int(round(pct * dots_per_percent))
+
+        xs = i + rng.uniform(-0.30, 0.30, size=filled)
+        ys = rng.uniform(0.06, 0.94, size=filled)
+
+        ax.scatter(xs, ys, s=18)
+
+    ax.set_xlim(-0.6, len(fragrance_names) - 0.4)
+    ax.set_ylim(y_min, y_max)
+    ax.set_xticks(x, fragrance_names)
+    ax.tick_params(axis="x", rotation=20)
     ax.set_yticks([])
     for spine in ax.spines.values():
         spine.set_visible(False)
-    ax.set_xlim(-2, 26)
-    ax.set_ylim(-1, max(ax_y.max(), bx_y.max()) + 2)
+    ax.set_title("V5 — Perfume Oil Concentration (Filled Dots Only)")
     p5 = save_figure(fig, "V5_dots_no_aids.png")
 
-    fig, ax = plt.subplots(figsize=(7, 4))
-    ax.scatter(ax_x, ax_y, s=20)
-    ax.scatter(bx_x, bx_y, s=20)
-    ax.set_title("V6 — Dot Counts (Boxes)")
-    ax.set_xticks([4.5, 18.5], ["A", "B"])
+    fig, ax = plt.subplots(figsize=(9.2, 4.0))
+    for i, pct in enumerate(oil_percent):
+        filled = int(round(pct * dots_per_percent))
+
+        xs_all = i + rng.uniform(-0.30, 0.30, size=total_dots)
+        ys_all = rng.uniform(0.06, 0.94, size=total_dots)
+
+        ax.scatter(xs_all, ys_all, s=18, facecolors="none", edgecolors="0.65", linewidths=0.9, alpha=0.85)
+
+        xs_fill = xs_all[:filled]
+        ys_fill = ys_all[:filled]
+        ax.scatter(xs_fill, ys_fill, s=18)
+
+        ax.add_patch(Rectangle((i - 0.38, 0.04), 0.76, 0.92, fill=False, linewidth=1.4, alpha=0.55))
+
+    ax.set_xlim(-0.6, len(fragrance_names) - 0.4)
+    ax.set_ylim(y_min, y_max)
+    ax.set_xticks(x, fragrance_names)
+    ax.tick_params(axis="x", rotation=20)
     ax.set_yticks([])
     for spine in ax.spines.values():
         spine.set_visible(False)
-    ax.set_xlim(-2, 26)
-    ax.set_ylim(-1, max(ax_y.max(), bx_y.max()) + 2)
-
-    ax.add_patch(Rectangle((-0.8, -0.8), 11.6, 7.2, fill=False, linewidth=2, alpha=0.7))
-    ax.add_patch(Rectangle((13.2, -0.8), 11.6, 7.2, fill=False, linewidth=2, alpha=0.7))
+    ax.set_title("V6 — Perfume Oil Concentration (100% Reference Dots)")
     p6 = save_figure(fig, "V6_dots_boxes.png")
 
-    return [
-        (p5, "Which group has more dots? (A or B)", "B"),
-        (p6, "Which group has more dots? (A or B)", "B"),
-    ]
+    diff_1 = abs(oil_percent[1] - oil_percent[0])  # Amber Noir - Citrus Sky
+    diff_2 = abs(oil_percent[5] - oil_percent[4])  # Iris Smoke - Juniper Clean
 
+    if diff_1 >= diff_2:
+        correct = "Amber Noir minus Citrus Sky"
+    else:
+        correct = "Iris Smoke minus Juniper Clean"
+
+    return [
+        (p5, "Which difference is larger: Amber Noir minus Citrus Sky, or Iris Smoke minus Juniper Clean?", correct),
+        (p6, "Which difference is larger: Amber Noir minus Citrus Sky, or Iris Smoke minus Juniper Clean?", correct),
+    ]
 
 def _write_questions(output_folder, items) -> str:
     path = os.path.join(output_folder, "questions.txt")
