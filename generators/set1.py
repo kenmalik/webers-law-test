@@ -196,7 +196,7 @@ def _build_dot_count_pair(save_figure):
     ]
 
 def _write_questions(output_folder, items) -> str:
-    path = os.path.join(output_folder, "pair_questions.txt")
+    path = os.path.join(output_folder, "v1v6_questions.txt")
     lines = ["Questions and answer key\n"]
 
     for idx, (image_path, question, answer) in enumerate(items, start=1):
