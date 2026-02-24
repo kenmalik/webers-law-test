@@ -1,10 +1,12 @@
-from generators.sample import make_viz
+from generators import set1
 from generators import set1_alt
+from generators.sample import make_viz
 
 def main():
     print("Weber's law test")
-    make_viz()
-    set1_alt.make_viz()
+    make_viz()          # sample.py    (..)
+    set1.make_viz()     # set1.py      (6 images, V1-V6)
+    set1_alt.make_viz() # set1_alt.py  (3 images, set1_)
 
 if __name__ == "__main__":
     main()
