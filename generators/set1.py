@@ -3,12 +3,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
-def make_viz(output_folder: str = "weber_stimuli_out", export_dpi: int = 200) -> None:
+def make_viz(out: str = "weber_stimuli_out", export_dpi: int = 200) -> None:
     """
     Generates 6 Weber’s Law stimulus images (3 pairs) and a questions.txt file.
 
     Output:
-      <output_folder>/
+      <out>/
         V1_bar_no_aids.png
         V2_bar_gridlines.png
         V3_line_no_aids.png
@@ -17,10 +17,10 @@ def make_viz(output_folder: str = "weber_stimuli_out", export_dpi: int = 200) ->
         V6_dots_boxes.png
         questions.txt
     """
-    os.makedirs(output_folder, exist_ok=True)
+    os.makedirs(out, exist_ok=True)
 
     def save_figure(fig, filename) -> str:
-        path = os.path.join(output_folder, filename)
+        path = os.path.join(out, filename)
         fig.tight_layout()
         fig.savefig(path, dpi=export_dpi, bbox_inches="tight")
         plt.close(fig)
@@ -31,9 +31,9 @@ def make_viz(output_folder: str = "weber_stimuli_out", export_dpi: int = 200) ->
     items += _build_line_pair(save_figure)
     items += _build_dot_count_pair(save_figure)
 
-    questions_path = _write_questions(output_folder, items)
+    questions_path = _write_questions(out, items)
 
-    print(f"Saved files to: {os.path.abspath(output_folder)}")
+    print(f"Saved files to: {os.path.abspath(out)}")
     print(f"Questions file: {os.path.abspath(questions_path)}")
     for image_path, _, _ in items:
         print(" -", os.path.basename(image_path))
@@ -195,8 +195,8 @@ def _build_dot_count_pair(save_figure):
         (p6, "Which difference is larger: Amber Noir minus Citrus Sky, or Iris Smoke minus Juniper Clean?", correct),
     ]
 
-def _write_questions(output_folder, items) -> str:
-    path = os.path.join(output_folder, "questions.txt")
+def _write_questions(out, items) -> str:
+    path = os.path.join(out, "questions.txt")
     lines = ["Questions and answer key\n"]
 
     for idx, (image_path, question, answer) in enumerate(items, start=1):
