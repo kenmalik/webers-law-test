@@ -15,14 +15,14 @@ def make_viz():
     ax.set_ylabel("International Student Percentage")
 
     plt.tight_layout()
-    plt.savefig("set2-no-aid.png")
+    plt.savefig("out/set2-no-aid.png")
 
     ax.grid(axis="y", linestyle="--", alpha=0.7)
-    plt.savefig("set2-horizontal-lines.png")
+    plt.savefig("out/set2-horizontal-lines.png")
 
     ax.grid(False)
     ax.bar(data.index, np.full((len(data)), 100) - data, bottom=data, color="lightblue")
-    plt.savefig("set2-fill-bar.png")
+    plt.savefig("out/set2-fill-bar.png")
 
 
 def load_data():
