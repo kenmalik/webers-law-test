@@ -115,7 +115,7 @@ def _build_line_pair(save_figure):
     ax.legend(frameon=False, loc="upper right")
     p4 = save_figure(fig, "V4_line_gridlines.png")
 
-    areas = {name: float(np.trapz(y, price_points)) for name, y in demand_curves.items()}
+    areas = {name: float(np.trapezoid(y, price_points)) for name, y in demand_curves.items()}
     correct_product = max(areas, key=areas.get)
 
     return [
