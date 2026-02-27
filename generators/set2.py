@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 
 
@@ -20,6 +21,7 @@ def make_viz():
     plt.savefig("set2-horizontal-lines.png")
 
     ax.grid(False)
+    ax.bar(data.index, np.full((len(data)), 100) - data, bottom=data, color="lightblue")
     plt.savefig("set2-fill-bar.png")
 
 
