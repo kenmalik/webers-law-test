@@ -86,6 +86,3 @@ def _write_questions(output_folder, items) -> str:
         for idx, (img, q, a) in enumerate(items, 1):
             f.write(f'{idx}. {os.path.basename(img)}\n Q: {q}\n Correct: {a}\n\n')
     return path
-
-if __name__ == '__main__':
-    make_viz()
